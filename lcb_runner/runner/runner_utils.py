@@ -34,6 +34,10 @@ def build_runner(args, model: LanguageModel):
         raise NotImplementedError(
             f"Runner for language model style {model.model_style} not implemented yet"
         )
+    elif model.model_style == LMStyle.DeepSeekR2C:
+        from lcb_runner.runner.vllm_r2c_runner import VLLMRunner
+
+        return VLLMRunner(args, model)
     else:
         from lcb_runner.runner.vllm_runner import VLLMRunner
 

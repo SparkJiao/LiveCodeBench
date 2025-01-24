@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 from enum import Enum
 
 
@@ -16,6 +17,7 @@ class LMStyle(Enum):
     GenericBase = "GenericBase"
 
     DeepSeekCodeInstruct = "DeepSeekCodeInstruct"
+    DeepSeekR2C = "DeepSeekR2C"
     CodeLLaMaInstruct = "CodeLLaMaInstruct"
     StarCoderInstruct = "StarCoderInstruct"
     CodeQwenInstruct = "CodeQwenInstruct"
@@ -39,8 +41,10 @@ class LanguageModel:
     model_name: str
     model_repr: str
     model_style: LMStyle
-    release_date: datetime | None  # XXX Should we use timezone.utc?
-    link: str | None = None
+    # release_date: datetime | None  # XXX Should we use timezone.utc?
+    release_date: Optional[datetime] = None
+    # link: str | None = None
+    link: Optional[str] = None
 
     def __hash__(self) -> int:
         return hash(self.model_name)
@@ -613,6 +617,20 @@ LanguageModelList: list[LanguageModel] = [
         LMStyle.DracarysQwen,
         datetime(2023, 1, 1),
         link="https://huggingface.co/abacusai/Dracarys-72B-Instruct",
+    ),
+    LanguageModel(
+        "deepseek-coder-v1.5-instruct-7b-r2c",
+        "DeepSeekR2C",
+        LMStyle.DeepSeekR2C,
+        datetime(2023, 1, 1),
+        link="https://huggingface.co/chitanda/deepseek-coder-v1.5-instruct-7b-r2c",
+    ),
+    LanguageModel(
+        "deepseek-coder-7b-instruct-v1.5",
+        "DSCoder-7b-Ins-v1.5",
+        LMStyle.DeepSeekCodeInstruct,
+        datetime(2023, 9, 1),
+        link="https://huggingface.co/deepseek-ai/deepseek-coder-6.7b-instruct",
     ),
 ]
 

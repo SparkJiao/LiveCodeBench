@@ -49,6 +49,7 @@ def get_args():
     parser.add_argument(
         "--n", type=int, default=10, help="Number of samples to generate"
     )
+    parser.add_argument("--max_num_seqs", type=int, default=256, help="Max number of sequences during vLLM inference.")
     parser.add_argument(
         "--codegen_n",
         type=int,

@@ -17,6 +17,8 @@ class PromptConstants:
 
     SYSTEM_MESSAGE_DEEPSEEK = f"You are an AI programming assistant, utilizing the DeepSeek Coder model, developed by DeepSeek Company, and you answer questions related to computer science."
 
+    SYSTEM_MESSAGE_DEEPSEEK_R2C = f"<｜begin▁of▁sentence｜>You are an AI programming assistant, utilizing the Deepseek Coder model, developed by Deepseek Company, and you only answer questions related to computer science. For politically sensitive questions, security and privacy issues, and other non-computer science questions, you will refuse to answer\n### Instruction:\n"
+
     SYSTEM_MESSAGE_MAGIC = f"You are an exceptionally intelligent coding assistant that consistently delivers accurate and reliable responses to user instructions.\n\n@@ Instruction\n"
 
     SYSTEM_MESSAGE_WIZARD = "Below is an instruction that describes a task. Write a response that appropriately completes the request."
@@ -385,6 +387,52 @@ def format_prompt_generation(
             truncation=False,
             padding=False,
         )
+
+    if LanguageModelStyle == LMStyle.DeepSeekR2C:
+        prompt = """You are an expert programmer. Here is a programming problem:
+--------
+{question}
+--------
+Please carefully comprehend the requirements in the problem, and write down the solution program to pass it under the given time and memory constraints.
+
+**REMEMBER** to strictly follow the steps below to help reduce the potential flaws:
+(1) According to the input scale and the time/memory constraints, think about the time complexity and space complexity of your solution.
+(2) Think **step-by-step** to design the algorithm.
+(3) Translate your thoughts into Python program to solve it.
+
+Besides, your Python solution program should be located between <BEGIN> and <END> tags. For example:
+<BEGIN>
+t = int(input())
+...
+print(ans)
+<END>
+
+Now, remember my instruction and let's get started:\n### Response:\n"""
+#         prompt = """You are an expert programmer. Here is a programming problem:
+# --------
+# {question}
+# --------
+# Please carefully comprehend the requirements in the problem, and write down the solution program to pass it under the given time and memory constraints.
+#
+# **REMEMBER** to strictly follow the steps below to help reduce the potential flaws:
+# (1) According to the input scale and the time/memory constraints, think about the time complexity and space complexity of your solution.
+# (2) Think **step-by-step** to design the algorithm.
+# (3) Translate your thoughts into Python program to solve it.
+# (4) If there is a starter code, use it to write the solution program. Do not modify the starter code.
+#
+# Besides, your Python solution program should be located between <BEGIN> and <END> tags. For example:
+# <BEGIN>
+# t = int(input())
+# ...
+# print(ans)
+# <END>
+#
+# Now, remember my instruction and let's get started:\n### Response:\n"""
+        question_content = question.question_content
+        if question.starter_code:
+            question_content += f"\n\n{question.starter_code}"
+        prompt = PromptConstants.SYSTEM_MESSAGE_DEEPSEEK_R2C + prompt.format(question=question_content)
+        return prompt
 
     raise NotImplementedError(
         f"LanguageModelStyle {LanguageModelStyle} not implemented"

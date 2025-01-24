@@ -1,6 +1,7 @@
 import os
 import json
 from abc import ABC, abstractmethod
+from typing import Union
 
 from tqdm import tqdm
 
@@ -33,7 +34,7 @@ class BaseRunner(ABC):
                 json.dump(self.cache, f, indent=4)
 
     # @abstractmethod
-    def _run_single(self, prompt: str | list[dict[str, str]]) -> list[str]:
+    def _run_single(self, prompt: Union[str,  list[dict[str, str]]]) -> list[str]:
         pass
 
     @staticmethod
@@ -43,7 +44,7 @@ class BaseRunner(ABC):
         Static method to be used in multiprocessing
         Calls the _run_single method with the combined arguments
         """
-        prompt: str | list[dict[str, str]]
+        prompt: Union[str, list[dict[str, str]]]
         cache: dict[str, str]
         call_method: callable
         prompt, cache, args, call_method = combined_args
@@ -59,7 +60,7 @@ class BaseRunner(ABC):
 
         return result
 
-    def run_batch(self, prompts: list[str | list[dict[str, str]]]) -> list[list[str]]:
+    def run_batch(self, prompts: list[Union[str, list[dict[str, str]]]]) -> list[list[str]]:
         outputs = []
         arguments = [
             (
@@ -97,7 +98,7 @@ class BaseRunner(ABC):
         return outputs
 
     def prompts_to_outputs(
-        self, prompts: list[str | list[dict[str, str]]]
+        self, prompts: list[Union[str, list[dict[str, str]]]]
     ) -> list[list[str]]:
         if self.args.use_cache:
             outputs = []

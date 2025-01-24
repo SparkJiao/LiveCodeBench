@@ -38,12 +38,11 @@ BenchMarkType = list[
 
 
 def build_prompt_benchmark(
-    args,
+        args,
 ) -> tuple[
-    list[CodeExecutionProblem]
-    | list[CodeGenerationProblem]
-    | list[TestOutputPredictionProblem],
-    callable,
+    Union[list[CodeExecutionProblem],
+    list[CodeGenerationProblem],
+    list[TestOutputPredictionProblem],], callable,
 ]:
     scenario: Scenario = args.scenario
 
@@ -77,10 +76,10 @@ def build_prompt_benchmark(
 
 
 def combine_results(
-    scenario: Scenario,
-    results: list[list[str]],
-    model: LanguageModel,
-    cot_code_execution: bool = False,
+        scenario: Scenario,
+        results: list[list[str]],
+        model: LanguageModel,
+        cot_code_execution: bool = False,
 ):
     if scenario == Scenario.codegeneration:
         combined_results = [
@@ -174,12 +173,10 @@ def sort_and_extract_save_results(scenario: Scenario, save_results: list[dict]):
 
 
 def get_metrics(
-    scenario: Scenario,
-    args,
-    benchmark: list[
-        CodeGenerationProblem | CodeExecutionProblem | TestOutputPredictionProblem
-    ],
-    combined_results,
+        scenario: Scenario,
+        args,
+        benchmark: list[Union[CodeGenerationProblem, CodeExecutionProblem, TestOutputPredictionProblem]],
+        combined_results,
 ):
     eval_samples = [instance.get_evaluation_sample() for instance in benchmark]
     generations = [extracted for _, extracted in combined_results]

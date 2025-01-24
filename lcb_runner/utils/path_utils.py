@@ -12,7 +12,7 @@ def ensure_dir(path: str, is_file=True):
     return
 
 
-def get_cache_path(model_repr:str, args) -> str:
+def get_cache_path(model_repr: str, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
@@ -21,17 +21,20 @@ def get_cache_path(model_repr:str, args) -> str:
     return path
 
 
-def get_output_path(model_repr:str, args) -> str:
+def get_output_path(model_repr: str, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
     cot_suffix = "_cot" if args.cot_code_execution else ""
-    path = f"output/{model_repr}/{scenario}_{n}_{temperature}{cot_suffix}.json"
+    if args.custom_output_save_name:
+        path = f"output/{model_repr}/{args.custom_output_save_name}/{scenario}_{n}_{temperature}{cot_suffix}.json"
+    else:
+        path = f"output/{model_repr}/{scenario}_{n}_{temperature}{cot_suffix}.json"
     ensure_dir(path)
     return path
 
 
-def get_eval_all_output_path(model_repr:str, args) -> str:
+def get_eval_all_output_path(model_repr: str, args) -> str:
     scenario: Scenario = args.scenario
     n = args.n
     temperature = args.temperature
